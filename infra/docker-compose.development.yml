@@ -1,0 +1,20 @@
+version: '2.4'
+services:
+  rabbitmq:
+    image: 'rabbitmq:3-management'
+    container_name: 'rabbitmq'
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=senha
+    volumes:
+      - './enabled_plugins:/etc/rabbitmq/enabled_plugins'
+
+  redis:
+    image: 'redis:latest'
+    container_name: 'redis'
+    ports:
+      - '6379:6379'
+

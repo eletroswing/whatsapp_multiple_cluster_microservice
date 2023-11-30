@@ -1,0 +1,25 @@
+{
+  "name": "whatsapp_multiple_cluster_microservice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "dev": "nodemon main.js"
+  },
+  "author": "eletroswing",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/eletroswing/whatsapp_multiple_cluster_microservice"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1",
+    "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "ioredis": "^5.3.2",
+    "os-utils": "^0.0.14",
+    "whatsapp-web.js": "^1.23.0"
+  }
+}
