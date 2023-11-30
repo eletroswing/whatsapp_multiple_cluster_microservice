@@ -10,6 +10,7 @@ class SessionHandler {
     this._redisUrl = redisUrl;
     this._rabbitMqUrl = rabbitMqUrl;
     this._clients = new Map();
+    this._authenticated_clients = new Map();
 
     this.#initializeConnections();
   }
@@ -56,10 +57,12 @@ class SessionHandler {
 
     client.on("authenticated", async () => {
       await this.#deleteQrCodeRedis(key);
+      this._authenticated_clients.set(key, true);
       await this.#sendAmqpEvent("authenticated_instance", true, { key: key });
     });
 
     client.on("disconnected", async () => {
+      this._authenticated_clients.delete(key);
       await this.#sendAmqpEvent("disconnected_instance", true, { key: key });
     });
 
@@ -82,16 +85,19 @@ class SessionHandler {
 
     this._clients.get(key).destroy();
     this._clients.delete(key);
+    this._authenticated_clients.delete(key);
     await this.#deleteAllInstanceDataRedis(key);
   }
 
   async sendMessage(key = null, chatId, message) {
     if (!key) return;
-    const client = this._clients.get(key);
-    if (client) {
-      await client.sendMessage(chatId, {
-        message: message,
-      });
+    if(this._authenticated_clients.has(key)){
+      const client = this._clients.get(key);
+      if (client) {
+        await client.sendMessage(chatId, {
+          message: message,
+        });
+      }
     }
   }
 
